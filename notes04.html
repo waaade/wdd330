@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 04 Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Week 04 Notes</h1>
+    <h2>Chapter 8: Forms</h2>
+    <ul>
+        <li>DOM method of accessing a form: document.forms[0]. Or you can
+            search by the name attribute: document.forms.thename.
+        </li>
+        <li>A form Javascript object has a method called elements, it has the contents.</li>
+        <li>Interesting: &lt;input type='image' src='button.png'&gt; This is how you use an image as a button.</li>
+        <li>input.value gets the text inside the field (input is just a name here, could be anything)</li>
+        <li>Javascript validation is useful, it can keep too many server requests from happening, 
+            plus it's another layer of protection, though there should always be server side validation as well</li>
+        <li>A good style for errors: &lt;style&gt;
+            .error{
+                background: #f99;
+                border: #900 1px solid;
+                display: none;
+            }
+        &lt;/style&gt;
+        </li>
+    </ul>
+    <h2>Chapter 12: Object-Oriented Programming</h2>
+    <ul>
+        <l1>Javascript is a prototype-based language rather than a class-based language. This means 
+            that OOP in Javascript involves making an object and then reusing it instead of making a
+            blueprint (class) as in C++ or Java. (Javascript does have classes after ES6 but it uses 
+            the prototype model in the background)
+        </l1>
+        <li>Parentheses are not required when instantiating a new object using a constructor function.
+            const redDice = new Dice;. If arguments need to provided, then parentheses are required.
+        </li>
+        <li>Different ways to create an object... const anObject = {}; anObject = new Object();</li>
+        <li>Javascript classes are declared similarly to other languages. They are easier to read and use.</li>
+        <li>Static methods: Class.function() instead of instance.function() </li>
+        <li>As you'd expect, the values of individual instances of a class can be overwritten with dot notation</li>
+        <li>Private variables are a matter of scope. Declare one inside a constructor (this is different from the 
+            normal this.thing = ) and it can't be accessed without getters and setters</li>
+        <li>Inheritance: use extends (similar syntax to Java)</li>
+        <li>Mixin is a thing that makes a deep copy of an object. It can add properties to an object</li>
+        <li>Smaller objects (fewer properties) are better design. Make big object from smaller ones</li>
+    </ul>
+    <h2>Modular Javascript</h2>
+    <ul>
+        <li>A module is self-contained. It's a piece of code that should serve one purpose.</li>
+        <li>Javascript module files use the keyword export.</li>
+        <li>A module can have one default export which can be used in a file without having to use curly braces</li>
+    </ul>
+</body>
+</html>
