@@ -1,0 +1,17 @@
+body {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+div {
+    border: 1px solid black;
+}
+
+textarea {
+    border: 1px solid black;
+    width: 200px;
+    resize: none;
+}
+
+#list-footer {
+    text-align: left;
+}
