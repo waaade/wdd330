@@ -1,31 +1,37 @@
-import * as ls from "ls.js";
-import * as utilities from "utilities";
+import * as ls from "/ls.js";
+import * as utilities from "/utilities.js";
 export default class Todos {
     constructor(elementId, key) {
-        this.elementId = elementId;
+        this.elementId = utilities.qs(elementId);
         this.key = key;
-        listTodos();
+        this.listTodos();
+        //make it so addTodo function will be called when button is touched.
+        utilities.onTouch("#add", this.addTodo);
     }
-
-    function addTodo() {
-        const task = Document.getElementById("new-item").value;
+    listTodos() {
+        renderTodoList(getTodos("myList"), this.elementId);
+    }
+    addTodo() {
+        const task = document.getElementById("new-item").value;
         saveTodo(task, "myList");
-        listTodos();
+        this.listTodos();
     }
-
-    function listTodos() {
-        const element = Document.getElementById("list");
-        renderTodoList(getTodos("myList"), element);
-    }
+    
 }
 
 let todoList = null;
 
 function saveTodo(task, key) {
     let date = new Date();    
-    let todo = { id:date.getTime(), content:task, completed:false }
+    let todo = { id:date.getTime(), content:task, completed:false };
     //Add one item to list
-    todoList.push(todo);
+    if (todoList == null) {
+        todoList = [ todo ]
+    }
+    else {
+        todoList.push(todo);
+    }
+    
     //Save entire list to localStorage
     ls.writeToLS(key, todoList);
 }
@@ -40,7 +46,10 @@ function getTodos(key) {
 
 function renderTodoList(list, element) {
     element.innerHTML = "";
-    list.forEach(item => {
-        element.append("<li>'item.content'</li>");
+    if (list != null) {
+        list.forEach(item => {
+        element.append("<li>" + item.content + "</li>");
     });
+    }
+    
 }
