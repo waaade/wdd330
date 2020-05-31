@@ -1,5 +1,5 @@
-import * as ls from "/ls.js";
-import * as utilities from "/utilities.js";
+import * as ls from "./ls.js";
+import * as utilities from "./utilities.js";
 
 let todoList = null;
 
