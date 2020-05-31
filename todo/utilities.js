@@ -4,8 +4,8 @@ function qs(selector) {
 
 function onTouch(elementSelector, callback) {
     let element = qs(elementSelector);
-    element.addEventListener("touchend", callback());
-    element.addEventListener("click", callback());
+    element.addEventListener("touchend", callback);
+    element.addEventListener("click", callback);
 }
 
 export { qs, onTouch }

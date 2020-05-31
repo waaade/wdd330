@@ -1,10 +1,12 @@
 import * as ls from "/ls.js";
 import * as utilities from "/utilities.js";
+
+let todoList = null;
+
 export default class Todos {
     constructor(elementId, key) {
         this.elementId = utilities.qs(elementId);
         this.key = key;
-        this.listTodos();
         //make it so addTodo function will be called when button is touched.
         utilities.onTouch("#add", this.addTodo);
     }
@@ -18,8 +20,6 @@ export default class Todos {
     }
     
 }
-
-let todoList = null;
 
 function saveTodo(task, key) {
     let date = new Date();    
@@ -45,10 +45,11 @@ function getTodos(key) {
 }
 
 function renderTodoList(list, element) {
+    //Clear before re-rendeing.
     element.innerHTML = "";
     if (list != null) {
         list.forEach(item => {
-        element.append("<li>" + item.content + "</li>");
+        element.innerHTML += ("<li>" + item.content + "</li>");
     });
     }
     
