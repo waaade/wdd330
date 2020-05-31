@@ -34,6 +34,8 @@ function saveTodo(task, key) {
     
     //Save entire list to localStorage
     ls.writeToLS(key, todoList);
+
+    
 }
 
 function getTodos(key) {
@@ -49,8 +51,34 @@ function renderTodoList(list, element) {
     element.innerHTML = "";
     if (list != null) {
         list.forEach(item => {
-        element.innerHTML += ("<li>" + item.content + "</li>");
-    });
+            if (!item.completed) {
+                element.innerHTML += "<span .item><button id=" + item.id + ">◯</button>";
+                element.innerHTML += item.content;
+            }
+            else {
+                element.innerHTML += "<span .item><button disabled>✓</button>";
+                element.innerHTML += "<del>" + item.content + "</del>";
+            }
+            element.innerHTML += "<button .delete id=del" + item.id + ">X</button></span><br><hr>";
+            });
     }
-    
+    //Render footer as well
+    let footer = utilities.qs("#list-footer");
+    if (list == null) {
+        footer.innerHTML = "0 tasks left";
+    }
+    else {
+        footer.innerHTML = countNotDone(list) + " tasks left";
+        }
+    }
+
+
+function countNotDone(list) {
+    let count = 0;
+    list.forEach(item => {
+        if (!item.completed) {
+            count++;
+        }
+    });
+    return count;
 }

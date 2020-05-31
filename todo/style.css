@@ -1,21 +1,26 @@
 body {
-    text-align: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 3%;
 }
 div {
     border: 1px solid black;
 }
 
-textarea {
-    border: 1px solid black;
-    width: 200px;
+input {
+    width: 90%;
     resize: none;
+    font-size: medium;
 }
 
 #list-footer {
     text-align: left;
+    padding: 10px;
 }
- 
-ul {
-    list-style-type: none;
+
+button {
+    font-size: large;
+}
+
+h1 {
+    text-align: center;
 }
