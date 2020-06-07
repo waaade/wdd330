@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes 07</title>
+</head>
+<body>
+    <h1>Week 07</h1>
+    <h2>Further Functions</h2>
+    <ul>
+        <li>“The call() method can be used to set the value of this inside a function to an object that is provided as the first argument.”</li>
+        <li>Basically you use call on a function to give it variables which it will use with this. apply is the same but the arguments are always provided as an array.</li>
+        <li>You can add properties to a function, like you can with an object.</li>
+        <li>A javascript function can redefine itself within itself. And call itself. Could actually be useful if there was something you wanted a function to do once but then have it do something else every other time it's called.</li>
+        <li>Error-first callbacks: two parameters in a callback function, first is error, second is data</li>
+        <li>Promises don't add additional functionality to callbacks but they do make them simpler</li>
+        <li>A promise is created and calls an asynchronous operation. It is then pending. When the operation is complete, the promise is settled. It is either resolved or rejected.</li>
+    </ul>
+    <code>const promise = new Promise( (resolve, reject) => {
+        // initialization code goes here
+        if (success) {
+            resolve(value);
+        } else {
+            reject(error);
+        }
+    });</code>
+    <ul>
+        <li>A then() method should be used to deal with a promise's outcome once it is settled.</li>
+    </ul>
+    <h2>Ajax</h2>
+    <ul>
+        <li>Ajax provides asynchronous loading which means websites can load things in the background and there's no need to reload the page.</li>
+        <li>The fetch API is simple. fetch(url), then a .then to tell it what to do with the response and .catch in case there's an error. It is a promise.</li>
+        <li>JSON is the most common format for AJAX responses. Works the same way as fetch. The JSON data returned is a Javascript object.</li>
+        <li>AJAX can send data too. Use fetch. Define the method (post)</li>
+    </ul>
+    
+</body>
+</html>
