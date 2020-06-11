@@ -8,6 +8,27 @@ div {
     background-color: white;
 }
 
+/* Create three unequal columns that floats next to each other */
+.column {
+    float: left;
+    padding: 10px;
+  }
+  
+  .left, .right {
+    width: 15%;
+  }
+  
+  .middle {
+    width: 60%;
+  }
+  
+  /* Clear floats after the columns
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  } */
+
 input {
     width: 90%;
     resize: none;

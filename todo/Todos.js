@@ -47,21 +47,52 @@ function getTodos(key) {
 }
 
 function renderTodoList(list, element) {
-    //Clear before re-rendeing.
-    element.innerHTML = "";
+    //element.innerHTML = "";
     if (list != null) {
+        //col1 has the "complete" buttons to mark when you've finished
+        let col1 = document.getElementById("col1");
+        col1.innerHTML = "";
         list.forEach(item => {
-            if (!item.completed) {
-                element.innerHTML += "<span .item><button id=" + item.id + ">◯</button>";
-                element.innerHTML += item.content;
+            let complete = document.createElement("div");
+              
+                if (item.completed) {
+                    complete.innerHTML = "<p>✓</p>"
+                }
+                else {
+                    complete.innerHTML = "<p>◯</p>";
+                }
+                complete.id = `c${item.id}`;                    
+                col1.appendChild(complete);
+            
+        });
+
+        //col2 has the actual text
+        let col2 = document.getElementById("col2");
+        col2.innerHTML = "";
+        list.forEach(item => {
+            let content = document.createElement("div");
+            if (item.completed) {
+                content.innerHTML = `<p><del>${item.content}</del></p>`;
             }
             else {
-                element.innerHTML += "<span .item><button disabled>✓</button>";
-                element.innerHTML += "<del>" + item.content + "</del>";
+                content.innerHTML = `<p>${item.content}</p>`;
             }
-            element.innerHTML += "<button .delete id=del" + item.id + ">X</button></span><br><hr>";
-            });
+            col2.appendChild(content);
+        });
+        //The delete button
+        let col3 = document.getElementById("col3");
+        col3.innerHTML = "";
+        list.forEach(item => {
+            let remove = document.createElement("div");
+            remove.innerHTML = "<p>X</p>";
+            remove.id = `r${item.id}`;               
+            col3.appendChild(remove);
+
+        });
+        addCompleteListeners(list);
+        addRemoveListeners(list);
     }
+                    
     //Render footer as well
     let footer = utilities.qs("#list-footer");
     if (list == null) {
@@ -70,8 +101,34 @@ function renderTodoList(list, element) {
     else {
         footer.innerHTML = countNotDone(list) + " tasks left";
         }
+        
+        
     }
 
+function addCompleteListeners(list) {
+    list.forEach(item => {
+        utilities.onTouch(`#c${item.id}`, ()=> {
+            if (item.completed) {
+                        item.completed = false;
+                    }
+            else {
+                 item.completed = true;
+                 }                    
+            ls.writeToLS("myList", list);
+            renderTodoList(getTodos("myList"), utilities.qs("#list"));
+            });
+    });
+}
+
+function addRemoveListeners(list) {
+    for (let i = 0; i < list.length; i++) {
+           utilities.onTouch(`#r${list[i].id}`, ()=> { 
+                list.splice(i, 1);
+                ls.writeToLS("myList", list);
+                renderTodoList(getTodos("myList"), utilities.qs("#list"));
+           });         
+     }
+}
 
 function countNotDone(list) {
     let count = 0;
