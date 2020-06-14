@@ -1,6 +1,5 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 3%;
     background-color: dodgerblue;
 }
 div {
@@ -8,36 +7,33 @@ div {
     background-color: white;
 }
 
-/* Create three unequal columns that floats next to each other */
 .column {
     float: left;
-    padding: 10px;
   }
   
   .left, .right {
-    width: 15%;
+    width: 14%;
+    text-align: center;
   }
   
   .middle {
-    width: 60%;
+    width: 70%
   }
   
-  /* Clear floats after the columns
   .row:after {
     content: "";
     display: table;
     clear: both;
-  } */
+  }
 
 input {
-    width: 90%;
-    resize: none;
+    width: 85%;
     font-size: medium;
+    padding: 1%;
 }
 
 #list-footer {
-    text-align: left;
-    padding: 10px;
+    text-align: center;
 }
 
 button {
