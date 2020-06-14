@@ -168,8 +168,8 @@ function addCompleteListeners(list) {
 }
 
 function addRemoveListeners(list) {
-    for (let i = 0; i < list.length; i++) {   
-        if (utilities.qs(`#r${list[i].id}` != null)) {
+    for (let i = 0; i < list.length; i++) {
+        if (utilities.qs(`#r${list[i].id}`) != null) {
                 utilities.onTouch(`#r${list[i].id}`, ()=> { 
                 list.splice(i, 1);
                 ls.writeToLS("myList", list);
