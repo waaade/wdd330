@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 08 Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Week 08 Notes</h1>
+    <h2>CSS3 Transforms and Transitions</h2>
+    <ul>
+        <li>Translate: moves an element</li>
+        <li>To move something along the x axis (45 px to the right in this case): transform: translateX(45px)</li>
+        <li>Scale: It scales the element, of course. transform:scale(1.5, 0.25). Providing only one value scales both x and y.</li>
+        <li>If you want multiple transform functions, put them in one space-separated list</li>
+        <li>Rotate: again, does what you expect. Degrees (deg) is probably the easiest parameter to give it but there are others: grads, radians, turns</li>
+        <li>Skew also uses degrees</li>
+        <li>.class h1 span { transition-property: transform; } Here a transition property is added to the transforms for that particular element.</li>
+        <li>For an element to have a transition it needs a default state and a final state (such as a :hover state). Then you need to add the transition functions. </li>
+        <li>Duration: very self-explanatory, just give it the number of seconds. Timing-function has more particular timing stuff. There's ease, linear, ease-in... You can define your own function too but that's advanced.</li>
+        <li>Delay: a small delay is often a good idea for transitions.</li>
+        <li>Transition shorthand: transition: transform 0.2s ease-out 50ms;</li>
+        <li>Animations let you use keyframes. A keyframe looks like a CSS declaration block. Animations also have similar functions to transitions, but there's more stuff too.</li>
+    </ul>
+    <h2>Canvas, SVG, and Drag and Drop</h2>
+    <ul>
+        <li>Canvas is an API that lets you draw anything with JavaScript. Useful because you don't need to download images.</li>
+        <li>Put Canvas in with html tags, give it an id and class, give it height and width. Probably should give it CSS border too.</li>
+        <li>var context = canvas.getContext("2d"); This returns an object that will let you draw in 2D.</li>
+        <li>strokeStyle, fillStyle (set them to colors). fillRect, strokeRectangle (give them coordinates of where to begin drawing and then height and width)</li>
+        <li>Those are the basic ideas of Canvas but there's a lot more you can do</li>
+        <li>SVG: scalable vector graphics</li>
+        <li>How to draw a circle with SVG (look at the source code to see how 😃but you can see that it works):</li>
+    </ul>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+            <circle cx="50" cy="50" r="25" fill="red"/>
+          </svg>
+    <ul>
+        <li>SVG is an XML-based format which also means it's text-based, so you can provide descriptions for your images</li>
+        <li>Complex shapes are much more difficult to code; however there are image editors that will help you create them (Inkscape is one)</li>
+        <li>Drag-and-drop: Make an element draggable, add an event listener for dragstart, and add event listeners for dragover and drop</li>
+    </ul>
+</body>
+</html>
