@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Week 10 Notes</title>
+</head>
+<body>
+    <h1>Week 10 Notes</h1>
+    <h2>Client-side Validation</h2>
+    <ul>
+        <li>Why client-side? Because if you only have server-side then the user won't know about the errors they submitted until the server sends its response. You can validate before sending to save time.</li>
+        <li>Why validate? So the data is inserted correctly. So their passwords are secure, protecting their data. And so no attacks compromise our site.</li>
+        <li>HTML5 has useful built-in validation: required, min, max, type, pattern</li>
+        <li>JavaScript validation is required for supporting old browsers that don't support the newer HTML5 stuff</li>
+        <li>Constraint validation API: validationMessage, validity (this one is important), willValidate. These can be used on just about any form element</li>
+        <li>On the validity thing: this has many properties, such as tooLong, typeMismatch, valueMissing. You gotta set things like minimums, maximums, and it'll validate them</li>
+        <li>Obvioulsy you can also validate forms without an API</li>
+    </ul>
+    <h2>Using Fetch</h2>
+    <ul>
+        <li>The Fetch API is a replacement for XMLHttpRequest. It's definitely easier.</li>
+        <li>Fetch can do POSTs too.</li>
+        <li>There are several response properties but the one used the most is probably "ok"</li>
+        <li>Not much else seems relevant enough to make note of, but <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">refer to the code examples when needed</a></li>
+    </ul>
+</body>
+</html>
