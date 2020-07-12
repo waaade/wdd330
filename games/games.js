@@ -22,3 +22,13 @@ function showNew() {
 function showFuture() {
 
 }
+
+// Displays a list of lists, plus the create list button with its name field
+function displayCustomLists() {
+
+}
+
+// Create a list in localstorage
+function createList(name) {
+
+}
