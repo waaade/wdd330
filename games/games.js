@@ -96,6 +96,7 @@ function createList(name) {
 }
 
 function search(url) {
+    console.log(url);
     document.getElementById("mainbody").innerHTML = "";
     fetch(url, {
     method: 'GET'
@@ -115,7 +116,23 @@ function search(url) {
             game.innerHTML = `<h3>${result.name}</h3>`
             gameList.append(game);
         })
+        //These two if statements are for when search results have multiple pages (basically always)
+        if (data.previous) {
+            let prevPage = document.createElement("button");
+            prevPage.className = "tinybutton";
+            prevPage.innerHTML = "Previous Page";
+            prevPage.addEventListener("click", search.bind(this, data.previous));
+            gameList.append(prevPage);
+        }
+        if (data.next) {
+            let nextPage = document.createElement("button");
+            nextPage.className = "tinybutton";
+            nextPage.innerHTML = "Next Page";
+            nextPage.addEventListener("click", search.bind(this, data.next));
+            gameList.append(nextPage);
+        }
         document.getElementById("mainbody").appendChild(gameList);
+        
     })
     .catch(error=>console.log("Error getting game data."));
 }
