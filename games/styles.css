@@ -36,13 +36,14 @@ div {
 
 .dark {
     background-color: black;
+    font-size: larger;
 }
 
 .divbutton {
     border: solid black 2px;
     background-color: aliceblue;
     color: dodgerblue;
-    width: 90%;
+    width: 80%;
     margin: auto;
     padding: 0px;
 }
@@ -60,5 +61,18 @@ div {
 }
 
 .tinybutton:hover {
+    cursor: pointer;
+}
+
+.specialbutton {
+    border: solid white 2px;
+    background-color: black;
+    color: white;
+    width: 80%;
+    margin: auto;
+    padding:0px;
+}
+
+.specialbutton:hover {
     cursor: pointer;
 }
