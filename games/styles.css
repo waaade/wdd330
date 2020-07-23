@@ -46,3 +46,19 @@ div {
     margin: auto;
     padding: 0px;
 }
+
+.divbutton:hover {
+    cursor: pointer;
+}
+
+.tinybutton {
+    border: solid black 1px;
+    width:25%;
+    margin: auto;
+    background-color: aliceblue;
+    color: dodgerblue;
+}
+
+.tinybutton:hover {
+    cursor: pointer;
+}

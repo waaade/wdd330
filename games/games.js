@@ -23,6 +23,21 @@ function displayMenu() {
     recent.innerHTML = "<p>See Popular Recently Released Games</p>";
     recent.addEventListener("click", showNew);
     body.appendChild(recent);
+
+    let critics = document.createElement("div");
+    critics.className = "divbutton";
+    critics.innerHTML = "<p>See Highest-Rated Games This Year</p>";
+    critics.addEventListener("click", showAcclaimed);
+    body.appendChild(critics);
+
+    let byName = document.createElement("div");
+    byName.innerHTML = "<input type='text' id='byname' placeholder='Search for a game'></input>";
+    let go = document.createElement("button");
+    go.className = "tinybutton";
+    go.innerHTML = "Search";
+    go.addEventListener("click", searchByName);
+    byName.appendChild(go);
+    body.appendChild(byName);
 }
 
 //implementation thoughts for localstorage: have a namesOfLists (or a list of names of lists, if you will)
@@ -32,9 +47,18 @@ function displayList(listName) {
 
 }
 
-// Displays the results of a query
-function displaySearch(array) {
-
+function searchByName() {
+    let text = document.getElementById("byname").value;
+    if (text != "") {
+        text = text.split(' ').join('+'); //Replace spaces with + https://stackoverflow.com/questions/3794919/replace-all-spaces-in-a-string-with
+        const query = baseURL + "search='" + text + "'";
+        console.log(query);
+        search(query);
+    }
+    else {
+        window.alert("Please enter some text and try searching again.");
+    }
+   
 }
 
 // Queries for new releases
@@ -50,6 +74,13 @@ function showFuture() {
     const dates = getTodayAndNextYear();
     console.log(dates[0]);
     const query = baseURL + "dates=" + dates[0] + "," + dates[1] + "&ordering=-added";
+    console.log(query);
+    search(query);
+}
+
+//Show the highest rated games for the current year
+function showAcclaimed() {
+    const query = baseURL + "dates=" + getYearStart() + "," + getToday() + "&ordering=-rating";
     console.log(query);
     search(query);
 }
@@ -113,5 +144,13 @@ function getLastMonth() {
     let theDate = new Date();
     theDate.setDate(0); //set day to first day of month
     theDate.setMonth(theDate.getMonth() - 1);
+    return theDate.toISOString().split('T')[0];
+}
+
+//Returns Jan 1 of current year in YYYY-MM-DD format
+function getYearStart() {
+    let theDate = new Date();
+    theDate.setMonth(0);
+    theDate.setDate(0);
     return theDate.toISOString().split('T')[0];
 }
