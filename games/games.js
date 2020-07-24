@@ -1,4 +1,5 @@
 import * as ls from "./ls.js";
+import * as t from "./time.js";
 
 //Different URLs could be used to search for developers, etc. but we'll stick with just games
 const baseURL = 'https://api.rawg.io/api/games?';
@@ -103,23 +104,66 @@ function displayList(name) {
     if (list.items) {
         let listDisplay = document.createElement("div");
         list.items.forEach(element => {
-        let listItem = document.createElement("div");
-        listItem.innerHTML = `<h2>${element.name}</h2>`;
-        listItem.className = "gameItem";
-        let delButton = document.createElement("div");
-        delButton.className = "tinybutton";
-        delButton.innerHTML = "Remove";
-        delButton.addEventListener("click", removeItem.bind(self, name, element.name));
-        listItem.appendChild(delButton);
-        listDisplay.appendChild(listItem);
+            let listItem = document.createElement("div");
+            listItem.innerHTML = `<h2>${element.name}</h2>`;
+            listItem.className = "gameItem";
+            let more = document.createElement("div");
+            more.className = "tinybutton";
+            more.innerHTML = "More Info";
+            console.log(element);
+            more.addEventListener("click", showMore.bind(self, element, null));
+            listItem.appendChild(more);
+            let delButton = document.createElement("div");
+            delButton.className = "tinybutton";
+            delButton.innerHTML = "Remove Game";
+            delButton.addEventListener("click", removeItem.bind(self, name, element.name));
+            listItem.appendChild(delButton);
+            listDisplay.appendChild(listItem);
         });
         body.append(listDisplay);
     }
     else {
         body.append("This list is empty. Go find some games to add!");
     }
-    
+    let renameButton = document.createElement("div");
+    renameButton.innerHTML = "Rename List";
+    renameButton.className = "tinybutton";
+    renameButton.addEventListener("click", rename.bind(self, name))
+    body.append(renameButton);
+    let listDelButton = document.createElement("div");
+    listDelButton.innerHTML = "Delete List";
+    listDelButton.className = "tinybutton";
+    listDelButton.addEventListener("click", removeList.bind(self, name));
+    body.append(listDelButton);
+
     body.append(getBackButton());
+}
+
+function rename(listName) {
+    let body = document.getElementById("mainbody");
+    body.innerHTML = "<h1>Rename This List</h1><input type='text' id='nameentry'</input>";
+    let go = document.createElement("div");
+    go.className = "tinybutton";
+    go.innerHTML = "Rename";
+    go.addEventListener("click", changeListName.bind(self, listName));
+    body.append(go);
+    body.append(getBackButton());
+}
+
+//Changes the *display name* of a list. 
+//I'm no longer sure why I thought two name variables were necessary but it keeps us from having to update the index here
+function changeListName(listName) {
+    console.log(listName);
+    let text = document.getElementById("nameentry").value;
+    if (text) {
+        let list = ls.readFromLS(listName);
+        list.displayName = text;
+        ls.writeToLS(listName, list);
+        displayMenu();
+    }
+    else {
+        window.alert("Please enter a name.");
+    }
 }
 
 //Remove an item from a list.
@@ -147,16 +191,15 @@ function removeItem(listName, itemName) {
     displayMenu();
 }
 
+//Deletes a whole list.
 function removeList(listName)
 {
-
-}
-
-//Show more information about a game
-function showMore(game, returnURL) {
-    if (returnURL) {
-        
-    }
+    localStorage.removeItem(listName); //That sure is easy
+    tempIndex = ls.readFromLS("index");
+    let i = tempIndex.indexOf(listName); //Remove list name from index
+    tempIndex.splice(i, 1);
+    ls.writeToLS("index", tempIndex);
+    displayMenu();
 }
 
 //Show the input field to create a list.
@@ -244,7 +287,6 @@ function createAndAdd(id, name) {
         else {
             window.alert("Please enter a name for the new list.");
         }
-      
     });
     body.appendChild(create);
     body.appendChild(getBackButton());
@@ -266,6 +308,11 @@ function search(url) {
             let game = document.createElement("div");
             game.className = "gameItem";
             game.innerHTML = `<h3>${result.name}</h3>`
+            let more = document.createElement("button");
+            more.className = "tinybutton";
+            more.innerHTML = "More Info";
+            more.addEventListener("click", showMore.bind(self, result, url));
+            game.appendChild(more);
             let add = document.createElement("button");
             add.className = "tinybutton";
             add.addEventListener("click", chooseListToAdd.bind(self, result.id, result.name));
@@ -306,20 +353,19 @@ function searchByName() {
     else {
         window.alert("Please enter some text and try searching again.");
     }
-   
 }
 
 // Queries for new releases
 function showNew() {
     let month
-    let query = baseURL + "dates=" + getLastMonth() + "," + getToday() + "&ordering=-added";
+    let query = baseURL + "dates=" + t.getLastMonth() + "," + t.getToday() + "&ordering=-added";
     console.log(query);
     search(query);
 }
 
 // Queries for popular upcoming games
 function showFuture() {
-    const dates = getTodayAndNextYear();
+    const dates = t.getTodayAndNextYear();
     console.log(dates[0]);
     const query = baseURL + "dates=" + dates[0] + "," + dates[1] + "&ordering=-added";
     console.log(query);
@@ -328,22 +374,46 @@ function showFuture() {
 
 //Show the highest rated games for the current year
 function showAcclaimed() {
-    const query = baseURL + "dates=" + getYearStart() + "," + getToday() + "&ordering=-metacritic";
+    const query = baseURL + "dates=" + t.getYearStart() + "," + t.getToday() + "&ordering=-metacritic";
     console.log(query);
     search(query);
 }
 
-//Get one specific game's details
-function searchGameById(id) {
-    const url = "https://api.rawg.io/api/games/" + id;
+//Show more information about a game
+function showMore(game, returnURL) {
+    console.log(game);
+    let body = document.getElementById("mainbody");
+    body.innerHTML = `<h1>${game.name}</h1>`;
+    if (returnURL) {
+        let returnBttn = document.createElement("div");
+        returnBttn.className = "divbutton";
+        returnBttn.innerHTML = "Back to Search Results";
+        returnBttn.addEventListener("click", search.bind(self, returnURL));
+        body.append(returnBttn);
+    }
+    else {
+        body.appendChild(getBackButton());
+    }
+    //Retreive info with fetch
+    const url = "https://api.rawg.io/api/games/" + game.id;
     fetch(url, {
         method: 'GET'
     })
     .then(response=>response.json())
-    .then(data=>console.log(data))
+    .then(data=> { console.log(data)
+    let website = document.createElement("div");
+    if (data.website) {
+        website.innerHTML = `<h3><a href=${data.website}>Visit Website</h3>`;
+        body.append(website);
+    }
+    let description = document.createElement("div");
+    description.innerHTML = "<h2>Description:</h2>"
+    description.innerHTML += data.description;
+    body.append(description);
+    }
+    )
     .catch(error=>console.log("Search by ID failed."));
 }
-
 
 //Returns a button that when clicked will render the main menu
 function getBackButton() {
@@ -353,42 +423,4 @@ function getBackButton() {
     back.addEventListener("click", displayMenu);
 
     return back;   
-}
-
-
-
-//Returns an array with today's date and the date one year from now.
-function getTodayAndNextYear() {
-    let theDate = new Date();
-    //Note: thanks to https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd for saving me a bit of time here
-    let curDate = theDate.toISOString().split('T')[0];
-    console.log(curDate);
-    theDate.setFullYear(theDate.getFullYear() + 1);
-    //https://stackoverflow.com/questions/8609261/how-to-determine-one-year-from-now-in-javascript
-    let futureDate = theDate.toISOString().split('T')[0];
-    console.log(futureDate);
-
-    return [curDate, futureDate];
-}
-
-//Return today's date in YYYY-MM-DD format
-function getToday() {
-    let theDate = new Date();
-    return theDate.toISOString().split('T')[0];
-}
-
-//Return last month in YYYY-MM-DD format
-function getLastMonth() {
-    let theDate = new Date();
-    theDate.setDate(0); //set day to first day of month
-    theDate.setMonth(theDate.getMonth() - 1);
-    return theDate.toISOString().split('T')[0];
-}
-
-//Returns Jan 1 of current year in YYYY-MM-DD format
-function getYearStart() {
-    let theDate = new Date();
-    theDate.setMonth(0);
-    theDate.setDate(0);
-    return theDate.toISOString().split('T')[0];
 }
