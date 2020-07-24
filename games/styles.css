@@ -45,7 +45,7 @@ div {
     color: dodgerblue;
     width: 80%;
     margin: auto;
-    padding: 0px;
+    padding: 5px;
 }
 
 .divbutton:hover {
@@ -70,7 +70,7 @@ div {
     color: white;
     width: 80%;
     margin: auto;
-    padding:0px;
+    padding:10px;
 }
 
 .specialbutton:hover {
