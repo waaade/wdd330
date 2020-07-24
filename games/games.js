@@ -39,7 +39,7 @@ function initializeLists() {
     else {
         localStorage.setItem("returning", "yes"); //The default list should only be made once, even if deleted
         const aGame = {id:24030, name:"Super Mario Bros. 3"};
-        const firstList = new GameList("default", "Default List", {aGame});
+        const firstList = new GameList("default", "Default List", [ aGame ]);
         ls.writeToLS("default", firstList);
         tempIndex = [ "default" ]; //The index has the names of the lists.
         ls.writeToLS("index", tempIndex);
@@ -89,21 +89,172 @@ function displayMenu() {
         let listName = document.createElement("div");
         listName.className = "divbutton";
         listName.innerHTML = ls.readFromLS(element).displayName;
-        //createList.addEventListener("click", displayList)
+        listName.addEventListener("click", displayList.bind(this, element));
         yourLists.appendChild(listName);
     });
     body.appendChild(yourLists);
 }
 
-
-
-//implementation thoughts for localstorage: have a namesOfLists (or a list of names of lists, if you will)
-//Then have the actual lists, each list a json string from an array
-// Displays a local list of games
+// Displays a user-created list of games
 function displayList(name) {
     let list = ls.readFromLS(name);
+    console.log(list);
+    let body = document.getElementById("mainbody");
+    body.innerHTML = `<h1>${list.displayName}</h1>`;
+    let listDisplay = document.createElement("div");
+    list.items.forEach(element => {
+        let listItem = document.createElement("div");
+        listItem.innerHTML = `<h2>${element.name}</h2>`;
+        listItem.className = "gameItem";
+        listDisplay.appendChild(listItem);
+    });
+    body.append(listDisplay);
+    body.append(getBackButton());
 }
 
+//Show more information about a game
+function showMore(game, returnURL) {
+    if (returnURL) {
+        
+    }
+}
+
+//Show the input field to create a list.
+function showCreateListField() {
+    let body = document.getElementById("mainbody");
+    body.innerHTML = "<h1>Create List</h1><input id='inputname' type='text' placeholder='Name of List'></input>";
+    let create = document.createElement("div");
+    create.className = "tinybutton";
+    create.innerHTML = "Create List";
+    create.addEventListener("click", createList);
+    body.appendChild(create);
+    body.appendChild(getBackButton());
+}
+
+//Create a new list.
+function createList() {
+    let text = document.getElementById("inputname").value;
+    if (text) {
+        tempIndex.push(text);
+        ls.writeToLS("index", tempIndex);
+        let newList = new GameList(text);
+        ls.writeToLS(text, newList);
+        displayMenu();
+    }
+    else {
+        window.alert("Please enter a name for the list and try again.");
+    }
+}
+
+//Display user interface to choose which list to add a game to.
+function chooseListToAdd(id, name) {
+    let body = document.getElementById("mainbody");
+    body.innerHTML = "";
+    let yourLists = document.createElement("div");
+    yourLists.innerHTML = "<h1>Add to Which List?</h1>";
+    let createList = document.createElement("div");
+    
+    createList.className = "specialbutton";
+    createList.innerHTML = "Create New List";
+    createList.addEventListener("click", createAndAdd.bind(self, id, name));
+    yourLists.appendChild(createList);
+    tempIndex.forEach(element => {
+        let listName = document.createElement("div");
+        listName.className = "divbutton";
+        listName.innerHTML = ls.readFromLS(element).displayName;
+        listName.addEventListener("click", addToList.bind(self, element, id, name));
+        yourLists.appendChild(listName);
+    });
+    body.appendChild(yourLists);
+}
+
+//Save a game to a given list.
+function addToList(listName, id, name) {
+    let tempList = ls.readFromLS(listName);
+    let addition = {id: id, name: name};
+    console.log(tempList);
+    if (tempList.items) {
+        tempList.items.push(addition);
+    }
+    else {
+        tempList.items = [ addition ];
+    }
+    ls.writeToLS(listName, tempList);
+    displayMenu();
+}
+
+//Create a list and add an item
+function createAndAdd(id, name) {
+    let body = document.getElementById("mainbody");
+    body.innerHTML = "<h1>Name Your New List</h1><input id='inputname' type='text' placeholder='Name of List'></input>";
+    let create = document.createElement("div");
+    create.className = "tinybutton";
+    create.innerHTML = "Create List";
+    create.addEventListener("click", ()=>{
+        let listName = document.getElementById("inputname").value
+        if (listName) {
+            let addition = {id: id, name: name};
+            let newList = new GameList(listName, listName, [ addition ]);
+            console.log(newList);
+            ls.writeToLS(listName, newList);
+            tempIndex.push(listName);
+            ls.writeToLS("index", tempIndex);
+            displayMenu();
+        }
+        else {
+            window.alert("Please enter a name for the new list.");
+        }
+      
+    });
+    body.appendChild(create);
+    body.appendChild(getBackButton());
+}
+
+//Query the RAWG database and display the results
+function search(url) {
+    console.log(url);
+    document.getElementById("mainbody").innerHTML = "";
+    fetch(url, {
+    method: 'GET'
+})
+    .then(response=>response.json())
+    .then(data => { console.log(data)
+        let gameList = document.createElement("div");
+        gameList.innerHTML = "<h1>Search Results</h1>";
+        gameList.appendChild(getBackButton());
+        data.results.forEach(result => {
+            let game = document.createElement("div");
+            game.className = "gameItem";
+            game.innerHTML = `<h3>${result.name}</h3>`
+            let add = document.createElement("button");
+            add.className = "tinybutton";
+            add.addEventListener("click", chooseListToAdd.bind(self, result.id, result.name));
+            add.innerHTML = "Add";
+            game.appendChild(add);
+            gameList.append(game);
+        })
+        //These two if statements are for when search results have multiple pages (basically always)
+        if (data.previous) {
+            let prevPage = document.createElement("button");
+            prevPage.className = "tinybutton";
+            prevPage.innerHTML = "Previous";
+            prevPage.addEventListener("click", search.bind(this, data.previous));
+            gameList.append(prevPage);
+        }
+        if (data.next) {
+            let nextPage = document.createElement("button");
+            nextPage.className = "tinybutton";
+            nextPage.innerHTML = "Next";
+            nextPage.addEventListener("click", search.bind(this, data.next));
+            gameList.append(nextPage);
+        }
+        document.getElementById("mainbody").appendChild(gameList);
+        
+    })
+    .catch(error=>console.log("Error getting game data."));
+}
+
+//Makes a query from text the user inputs
 function searchByName() {
     let text = document.getElementById("byname").value;
     if (text != "") {
@@ -142,71 +293,6 @@ function showAcclaimed() {
     search(query);
 }
 
-//Show the input field to create a list.
-function showCreateListField() {
-    let body = document.getElementById("mainbody");
-    body.innerHTML = "<h1>Create List</h1><input id='inputname' type='text' placeholder='Name of List'></input>";
-    let create = document.createElement("div");
-    create.className = "tinybutton";
-    create.innerHTML = "Create List";
-    create.addEventListener("click", createList);
-    body.appendChild(create);
-    body.appendChild(getBackButton());
-}
-
-function createList() {
-    let text = document.getElementById("inputname").value;
-    if (text) {
-        tempIndex.push(text);
-        ls.writeToLS("index", tempIndex);
-        let newList = new GameList(text);
-        ls.writeToLS(text, newList);
-        displayMenu();
-    }
-    else {
-        window.alert("Please enter a name for the list and try again.");
-    }
-}
-
-//Query the RAWG database and display the results
-function search(url) {
-    console.log(url);
-    document.getElementById("mainbody").innerHTML = "";
-    fetch(url, {
-    method: 'GET'
-})
-    .then(response=>response.json())
-    .then(data => { console.log(data)
-        let gameList = document.createElement("div");
-        gameList.innerHTML = "<h1>Search Results</h1>";
-        gameList.appendChild(getBackButton());
-        data.results.forEach(result => {
-            let game = document.createElement("div");
-            game.className = "gameItem";
-            game.innerHTML = `<h3>${result.name}</h3>`
-            gameList.append(game);
-        })
-        //These two if statements are for when search results have multiple pages (basically always)
-        if (data.previous) {
-            let prevPage = document.createElement("button");
-            prevPage.className = "tinybutton";
-            prevPage.innerHTML = "Previous";
-            prevPage.addEventListener("click", search.bind(this, data.previous));
-            gameList.append(prevPage);
-        }
-        if (data.next) {
-            let nextPage = document.createElement("button");
-            nextPage.className = "tinybutton";
-            nextPage.innerHTML = "Next";
-            nextPage.addEventListener("click", search.bind(this, data.next));
-            gameList.append(nextPage);
-        }
-        document.getElementById("mainbody").appendChild(gameList);
-        
-    })
-    .catch(error=>console.log("Error getting game data."));
-}
-
 //Get one specific game's details
 function searchGameById(id) {
     const url = "https://api.rawg.io/api/games/" + id;
@@ -218,12 +304,6 @@ function searchGameById(id) {
     .catch(error=>console.log("Search by ID failed."));
 }
 
-//Show more information about a game
-function showMore(game, returnURL) {
-    if (returnURL) {
-        
-    }
-}
 
 //Returns a button that when clicked will render the main menu
 function getBackButton() {
