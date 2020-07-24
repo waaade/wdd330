@@ -1,0 +1,6 @@
+.quakeList {
+    cursor: pointer;
+    background: yellow;
+    margin:10px;
+    display: inline-block;
+}

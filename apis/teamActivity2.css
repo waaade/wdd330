@@ -1,0 +1,28 @@
+.pokemonName {
+    display:inline-block;
+    margin: 5px;
+    background-color: lightgreen;
+    cursor: pointer
+}
+
+.pokemonName p {
+    margin: 5px;
+}
+
+button {
+    cursor:pointer;
+}
+
+#pokemonInfo {
+    margin-top:10px;
+    width: 250px;
+    border: 1px solid black;
+    border-radius: 4px;
+    text-align: center;
+    background-color: lightyellow;
+}
+
+#pokemonInfo ul{
+    text-align:left;
+    margin-left:60px;
+}
