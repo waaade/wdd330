@@ -98,18 +98,58 @@ function displayMenu() {
 // Displays a user-created list of games
 function displayList(name) {
     let list = ls.readFromLS(name);
-    console.log(list);
     let body = document.getElementById("mainbody");
     body.innerHTML = `<h1>${list.displayName}</h1>`;
-    let listDisplay = document.createElement("div");
-    list.items.forEach(element => {
+    if (list.items) {
+        let listDisplay = document.createElement("div");
+        list.items.forEach(element => {
         let listItem = document.createElement("div");
         listItem.innerHTML = `<h2>${element.name}</h2>`;
         listItem.className = "gameItem";
+        let delButton = document.createElement("div");
+        delButton.className = "tinybutton";
+        delButton.innerHTML = "Remove";
+        delButton.addEventListener("click", removeItem.bind(self, name, element.name));
+        listItem.appendChild(delButton);
         listDisplay.appendChild(listItem);
-    });
-    body.append(listDisplay);
+        });
+        body.append(listDisplay);
+    }
+    else {
+        body.append("This list is empty. Go find some games to add!");
+    }
+    
     body.append(getBackButton());
+}
+
+//Remove an item from a list.
+function removeItem(listName, itemName) {
+    let list = ls.readFromLS(listName);
+    let newArray = null;
+    //Make a new array without the specified item
+    list.items.forEach(element => {
+        console.log(element.name);
+        console.log(itemName);
+        if (newArray)
+        {
+            if (element.name != itemName) {
+                newArray.push(element);
+            }
+        }
+        else {
+            if (element.name != itemName) {
+                newArray = [ element ];
+            }
+        }
+    });
+    list.items = newArray;
+    ls.writeToLS(listName, list);
+    displayMenu();
+}
+
+function removeList(listName)
+{
+
 }
 
 //Show more information about a game
